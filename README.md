@@ -132,8 +132,9 @@ client := http.Client{
         // So http2.Transport doesn't complain the URL scheme isn't 'https'
         AllowHTTP: true,
         // Pretend we are dialing a TLS endpoint. (Note, we ignore the passed tls.Config)
-        DialTLS: func(network, addr string, cfg *tls.Config) (net.Conn, error) {
-            return net.Dial(network, addr)
+        DialTLSContext: func(ctx context.Context, network, addr string, cfg *tls.Config) (net.Conn, error) {
+            var d net.Dialer
+            return d.DialContext(ctx, network, addr)
         },
     },
 }

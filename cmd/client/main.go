@@ -24,23 +24,23 @@ func main() {
 	//RoundTripExample()
 }
 
-const url = "http://localhost:9030/_groupcache/"
+const url = "http://localhost:1010/_groupcache/"
 
 func RoundTripExample() {
-	req, err := http.NewRequest("GET", url, nil)
-	checkErr(err, "during new request")
-
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	checkErr(err, "during new request")
+
 	tr := &http2.Transport{
 		AllowHTTP: true,
-		DialTLS: func(network, addr string, cfg *tls.Config) (net.Conn, error) {
-			return net.Dial(network, addr)
+		DialTLSContext: func(ctx context.Context, network, addr string, cfg *tls.Config) (net.Conn, error) {
+			var d net.Dialer
+			return d.DialContext(ctx, network, addr)
 		},
 	}
 
-	req.WithContext(ctx)
 	resp, err := tr.RoundTrip(req)
 	checkErr(err, "during roundtrip")
 
@@ -51,8 +51,9 @@ func HttpClientExample() {
 	client := http.Client{
 		Transport: &http2.Transport{
 			AllowHTTP: true,
-			DialTLS: func(network, addr string, cfg *tls.Config) (net.Conn, error) {
-				return net.Dial(network, addr)
+			DialTLSContext: func(ctx context.Context, network, addr string, cfg *tls.Config) (net.Conn, error) {
+				var d net.Dialer
+				return d.DialContext(ctx, network, addr)
 			},
 		},
 	}
