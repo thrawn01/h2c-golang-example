@@ -25,8 +25,8 @@ fmt.Printf("Listening [0.0.0.0:1010]...\n")
 checkErr(server.ListenAndServe(), "while listening")
 ```
 The above code allows the server to support
-[H2C upgrade](https://http2.github.io/http2-spec/#discover-http) and
-[H2C prior knowledge](https://http2.github.io/http2-spec/#known-http) along with
+[H2C upgrade](https://httpwg.org/specs/rfc7540.html#discover-http) and
+[H2C prior knowledge](https://httpwg.org/specs/rfc7540.html#known-http) along with
  standard HTTP/2 and HTTP/1.1 that golang natively supports.
 
 If you don't care about supporting HTTP/1.1 then you can run this code which only
