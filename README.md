@@ -21,6 +21,10 @@ server := &http.Server{
     Handler: h2c.NewHandler(handler, h2s),
 }
 
+// Call ConfigureServer() to register graceful shutdown handlers which allows
+// the server to terminate client streams when calling server.Shutdown()
+checkErr(http2.ConfigureServer(server, h2s), "during call to ConfigureServer()")
+
 fmt.Printf("Listening [0.0.0.0:1010]...\n")
 checkErr(server.ListenAndServe(), "while listening")
 ```

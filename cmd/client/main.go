@@ -42,7 +42,7 @@ func RoundTripExample() {
 	}
 
 	resp, err := tr.RoundTrip(req)
-	checkErr(err, "during roundtrip")
+	checkErr(err, "during call to RoundTrip()")
 
 	fmt.Printf("RoundTrip Proto: %d\n", resp.ProtoMajor)
 }

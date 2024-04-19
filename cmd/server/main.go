@@ -22,7 +22,7 @@ func main() {
 	//H2CServerPrior()
 }
 
-// This server supports "H2C upgrade" and "H2C prior knowledge" along with
+// H2CServerUpgrade server supports "H2C upgrade" and "H2C prior knowledge" along with
 // standard HTTP/2 and HTTP/1.1 that golang natively supports.
 func H2CServerUpgrade() {
 	h2s := &http2.Server{}
@@ -36,11 +36,13 @@ func H2CServerUpgrade() {
 		Handler: h2c.NewHandler(handler, h2s),
 	}
 
+	checkErr(http2.ConfigureServer(server, h2s), "during call to ConfigureServer()")
+
 	fmt.Printf("Listening [0.0.0.0:1010]...\n")
 	checkErr(server.ListenAndServe(), "while listening")
 }
 
-// This server only supports "H2C prior knowledge".
+// H2CServerPrior server only supports "H2C prior knowledge".
 // You can add standard HTTP/2 support by adding a TLS config.
 func H2CServerPrior() {
 	server := http2.Server{}
@@ -59,5 +61,6 @@ func H2CServerPrior() {
 				fmt.Fprintf(w, "Hello, %v, http: %v", r.URL.Path, r.TLS == nil)
 			}),
 		})
+		_ = conn.Close()
 	}
 }
